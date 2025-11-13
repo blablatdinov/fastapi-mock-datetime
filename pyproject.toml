@@ -1,3 +1,25 @@
+# The MIT License (MIT).
+#
+# Copyright (c) 2025 Almaz Ilaletdinov <a.ilaletdinov@yandex.ru>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 [project]
 name = "fastapi-mock-datetime"
 version = "0.1.0"
@@ -11,7 +33,6 @@ dependencies = [
     "fastapi (>=0.121.1)",
     "time-machine (>=2.0.0,<3.0.0)"
 ]
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "9.0.1"
@@ -28,3 +49,50 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+[tool.ruff.lint]
+select = ["ALL"]
+fixable = [
+  "ALL",
+]
+ignore = [
+  "ARG001",  # Unused function argument
+  "ARG002",  # Unused method argument
+  "D203",    # no-blank-line-before-class
+  "D213",    # multi-line-summary-first-line
+  "D401",    # First line of docstring should be in imperative mood
+  "D418",    # Function decorated with `@overload` shouldn't contain a docstring
+  "FBT001",  # Boolean-typed positional argument in function definition
+  "FBT002",  # Boolean-typed positional argument in function definition
+  "FIX002",  # Line contains T0DO, consider resolving the issue
+  "FLY002",  # We not use f-strings
+  "RUF100",  # WPS primary linter
+  "RUF001",  # Project contain cyrillic symbols
+  "RUF002",  # Project contain cyrillic symbols
+  "RET505",  # Unnecessary `elif` after `return` statement
+  "RET506",  # Unnecessary `elif` after `raise` statement
+  "UP030",   # We use explicit references
+  "UP032",   # We not use f-strings
+  "UP004",   # Class `PrayerReaction` inherits from `object`
+  "TD",      # "t0do" formats
+  "PLR630",  # We disrespect staticmethod
+  "TC003",   # Move standard library import `...` into a type-checking block
+  "TC001",   # Move application import into a type-checking block
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+multiline-quotes = "double"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  "S101",    # use of `assert` detected
+  "PLR2004", # Magic value
+  "PLR0913", # Too many arguments to function call
+  "INP001",  # Add an `__init__.py`. Tests is closed to import
+]
