@@ -26,24 +26,22 @@ poetry add fastapi-mock-datetime
 ## Quick Start
 
 ```python
+from datetime import datetime, UTC
 from fastapi import FastAPI
-from fastapi_mock_datetime import MockDateTimeMiddleware
+from fastapi_mock_datetime import mock_datetime_middleware
 
 app = FastAPI()
 
 # Add middleware
-app.add_middleware(MockDateTimeMiddleware)
+app.add_middleware(mock_datetime_middleware)
 
 @app.get("/")
 async def root():
-    from datetime import datetime, UTC
     return {"current_time": datetime.now(UTC).isoformat()}
 
 @app.get("/time-dependent")
 async def time_dependent_endpoint():
-    from datetime import datetime, UTC
     current_time = datetime.now(UTC)
-    
     if current_time.hour < 12:
         return {"message": "Good morning!"}
     else:
