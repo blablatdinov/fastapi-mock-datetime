@@ -6,7 +6,7 @@ authors = [
     {name = "Almaz Ilaletdinov",email = "a.ilaletdinov@yandex.ru"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "fastapi (>=0.121.1,<0.122.0)",
     "time-machine (>=2.19.0,<3.0.0)"
@@ -21,6 +21,7 @@ pytest = "9.0.1"
 httpx = "0.28.1"
 pytest-asyncio = "1.3.0"
 ruff = "0.14.4"
+deltaver = "1.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
