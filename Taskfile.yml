@@ -66,6 +66,7 @@ tasks:
     desc: "Run formatters"
     cmds:
       - poetry run ruff check fastapi_mock_datetime tests --fix --fix-only
+      - poetry run ruff format fastapi_mock_datetime tests
 
   lint:
     desc: "Run linters"

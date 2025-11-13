@@ -1,11 +1,14 @@
+from typing import Callable, Awaitable
 from datetime import UTC, datetime
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 import time_machine
 from fastapi import Request
 
 
-async def mock_datetime_middleware(request: Request, call_next):
+async def mock_datetime_middleware(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
     mock_time_header = request.headers.get("X-Mock-Date")
     if not mock_time_header:
         return await call_next(request)

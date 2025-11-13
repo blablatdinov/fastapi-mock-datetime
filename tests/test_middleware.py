@@ -1,3 +1,5 @@
+from typing import Awaitable, Callable
+from fastapi.responses import Response
 import pytest
 from datetime import UTC, datetime
 from fastapi import FastAPI, Request
@@ -7,30 +9,32 @@ from fastapi_mock_datetime.middleware import mock_datetime_middleware
 
 
 @pytest.fixture
-def app():
+def app() -> FastAPI:
     app = FastAPI()
 
     @app.middleware("http")
-    async def mock_middleware(request: Request, call_next):
+    async def mock_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
         return await mock_datetime_middleware(request, call_next)
 
     @app.get("/")
-    async def root():
+    async def root() -> dict[str, str]:
         return {"current_time": datetime.now(UTC).isoformat()}
 
     @app.get("/test")
-    async def test_endpoint():
+    async def test_endpoint() -> dict[str, str]:
         return {"message": "test"}
 
     return app
 
 
 @pytest.fixture
-def client(app):
+def client(app: FastAPI) -> TestClient:
     return TestClient(app)
 
 
-def test_without_mock_header(client):
+def test_without_mock_header(client: TestClient) -> None:
     response = client.get("/")
 
     assert response.status_code == 200
@@ -46,7 +50,7 @@ def test_without_mock_header(client):
     )
 
 
-def test_with_valid_mock_header_utc(client):
+def test_with_valid_mock_header_utc(client: TestClient) -> None:
     mock_time = "2023-10-05T12:00:00+00:00"
 
     response = client.get("/", headers={"X-Mock-Date": mock_time})
@@ -55,7 +59,7 @@ def test_with_valid_mock_header_utc(client):
     assert response.json()["current_time"] == mock_time
 
 
-def test_with_valid_mock_header_naive(client):
+def test_with_valid_mock_header_naive(client: TestClient) -> None:
     mock_time_naive = "2023-10-05T12:00:00"
     expected_time_utc = "2023-10-05T12:00:00+00:00"
 
@@ -65,7 +69,7 @@ def test_with_valid_mock_header_naive(client):
     assert response.json()["current_time"] == expected_time_utc
 
 
-def test_with_invalid_mock_header(client):
+def test_with_invalid_mock_header(client: TestClient) -> None:
     invalid_time = "invalid-date-format"
 
     response = client.get("/", headers={"X-Mock-Date": invalid_time})
@@ -87,7 +91,7 @@ def test_with_invalid_mock_header(client):
     }
 
 
-def test_mock_time_affects_only_current_request(client):
+def test_mock_time_affects_only_current_request(client: TestClient) -> None:
     mock_time = "2023-10-05T12:00:00+00:00"
     response1 = client.get("/", headers={"X-Mock-Date": mock_time})
     assert response1.json()["current_time"] == mock_time
@@ -97,7 +101,7 @@ def test_mock_time_affects_only_current_request(client):
     assert abs((datetime.now(UTC) - current_time).total_seconds()) < 1
 
 
-def test_different_endpoints_with_mock_time(client):
+def test_different_endpoints_with_mock_time(client: TestClient) -> None:
     mock_time = "2023-10-05T12:00:00+00:00"
 
     response1 = client.get("/", headers={"X-Mock-Date": mock_time})
@@ -107,7 +111,7 @@ def test_different_endpoints_with_mock_time(client):
     assert response2.json()["message"] == "test"
 
 
-def test_time_travel_isolation():
+def test_time_travel_isolation() -> None:
     original_time_before = datetime.now(UTC)
 
     mock_time = datetime(2023, 10, 5, 12, 0, 0, tzinfo=UTC)
