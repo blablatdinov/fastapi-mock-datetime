@@ -1,12 +1,12 @@
 from datetime import UTC, datetime
-from fastapi.responses import JSONResponse
 
 import time_machine
 from fastapi import Request
+from fastapi.responses import JSONResponse
 
 
 async def mock_datetime_middleware(request: Request, call_next):
-    mock_time_header = request.headers.get("X-Mock-Date")
+    mock_time_header = request.headers.get('X-Mock-Date')
     if not mock_time_header:
         return await call_next(request)
     try:
@@ -19,12 +19,12 @@ async def mock_datetime_middleware(request: Request, call_next):
         return JSONResponse(
             status_code=422,
             content={
-                "detail": [
+                'detail': [
                     {
-                        "type": "value_error",
-                        "loc": ["header", "x-mock-date"],
-                        "msg": "Invalid datetime format. Use ISO format: YYYY-MM-DDTHH:MM:SS[±HH:MM]",
-                        "input": mock_time_header,
+                        'type': 'value_error',
+                        'loc': ['header', 'x-mock-date'],
+                        'msg': 'Invalid datetime format. Use ISO format: YYYY-MM-DDTHH:MM:SS[±HH:MM]',
+                        'input': mock_time_header,
                     }
                 ]
             },
